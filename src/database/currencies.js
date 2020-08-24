@@ -1,5 +1,4 @@
 const {getDatabase} = require('./mongo');
-
 const collectionName = 'currencies';
 
 async function insertCurrency(currency) {

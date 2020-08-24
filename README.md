@@ -12,3 +12,8 @@ Below you will find the instructions and requirements on how to install and run 
 * The first step is to clone the repository;
 * ```npm install```      // to install all required dependencies
 * ```npm start```        // to start the server
+* Open dashboard/index.html in your browser
+
+### Utils
+
+Postman collection is included. It can be used to test endpoints and also retrieve activity logs.

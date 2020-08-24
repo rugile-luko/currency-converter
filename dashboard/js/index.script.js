@@ -1,36 +1,30 @@
 let currencyFrom = $("#currency-from");
 let currencyTo = $("#currency-to");
 let amount = $("#amount");
-let calculatedResults = $("#calculated-results");
+let calculatedResults = $("#results");
 let calculateButton = $("#calculate");
 
 $(document).ready(function () {
     $.get("http://localhost:3100/get-currencies", function (data) {
         data["currenciesFrom"].forEach(function (currencyConvertFrom) {
-            let newOption = currencyFrom.append(new Option(currencyConvertFrom, currencyConvertFrom));
-            // comment here
-            if (newOption.val("EUR")) {
-                newOption.attr("selected", true)
-            }
+            currencyFrom.append(new Option(currencyConvertFrom, currencyConvertFrom));
         });
+        currencyFrom.val("EUR");
         data["currenciesTo"].forEach(function (currencyConvertTo) {
-            let newOption = currencyTo.append(new Option(currencyConvertTo, currencyConvertTo));
-            // comment here
-            if (newOption.val("GBP")) {
-                newOption.attr("selected", true)
-            }
-        })
+            currencyTo.append(new Option(currencyConvertTo, currencyConvertTo));
+        });
+        currencyTo.val("GBP")
     });
 });
 
-// Listen for submit
 $("#currency-form").on("submit", function (event) {
     calculateResults();
     event.preventDefault();
 });
 
-// Calculate results
 function calculateResults () {
+    removeErrors();
+
     let valid = true;
     if (amount.val() === "") {
         amount.addClass("error-field");
@@ -46,27 +40,30 @@ function calculateResults () {
     }
 
     if (valid) {
-        // TODO: move all this to removeErrorsAndDisable method
-        $(".error-amount").hide();
-        $(".error").hide();
-        amount.removeClass("error-field");
-        currencyFrom.removeClass("error-field");
-        currencyTo.removeClass("error-field");
-
-        calculateButton.prop("disabled", true);
-        currencyFrom.prop("disabled", true);
-        currencyTo.prop("disabled", true);
-        amount.prop("disabled", true);
-
+        disableForm();
         $.post( "http://localhost:3100/calculate", { "currency-from": currencyFrom.val(), "currency-to": currencyTo.val(), "amount": amount.val() })
             .done(function (data) {
-                let innerText = "Calculated value: " + parseInt(amount.val()).toFixed(2) + " " + currencyFrom.val()
-                    + " = " + data["result"].toFixed(2) + " " + currencyTo.val();
-                $("#result").html("<p>" + innerText + "</p>");
+                $('#calculated-from').html(parseInt(amount.val()).toFixed(2) + " " + currencyFrom.val());
+                $('#calculated-result').html(data["result"].toFixed(2) + " " + currencyTo.val());
                 calculatedResults.show();
             });
     }
 }
+
+let removeErrors = function () {
+    $(".error-amount").hide();
+    $(".error").hide();
+    amount.removeClass("error-field");
+    currencyFrom.removeClass("error-field");
+    currencyTo.removeClass("error-field");
+};
+
+let disableForm = function () {
+    calculateButton.prop("disabled", true);
+    currencyFrom.prop("disabled", true);
+    currencyTo.prop("disabled", true);
+    amount.prop("disabled", true);
+};
 
 // Restart Calculations
 $("#restart-button").click(function () {

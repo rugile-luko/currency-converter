@@ -1,17 +1,11 @@
-// require http modules first
-
 const http = require('http');
 const {startDatabase} = require('./database/mongo');
 const {insertCurrency} = require('./database/currencies');
 
-//import app.js file
 const app = require('./app');
-
-// define port to be used
 const port = process.env.PORT || 3100;
 const server = http.createServer(app);
 
-// start the in-memory MongoDB instance
 startDatabase().then(async () => {
     const https = require('https');
 

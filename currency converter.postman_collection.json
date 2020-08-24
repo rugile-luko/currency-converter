@@ -1,0 +1,126 @@
+{
+	"info": {
+		"_postman_id": "c6877eb3-f354-43a6-affd-9257c5a2826d",
+		"name": "currency converter",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get-currencies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3100/get-currencies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3100",
+					"path": [
+						"get-currencies"
+					]
+				},
+				"description": "asd"
+			},
+			"response": []
+		},
+		{
+			"name": "calculate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "currency-from",
+							"value": "GBP",
+							"type": "text"
+						},
+						{
+							"key": "currency-to",
+							"value": "EUR",
+							"type": "text"
+						},
+						{
+							"key": "amount",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "rate",
+							"value": "0.80",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3100/calculate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3100",
+					"path": [
+						"calculate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lietuvos-bankas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.lb.lt/webservices/FxRates/FxRates.asmx/getFxRates?tp=EU&dt=2020-08-24",
+					"protocol": "https",
+					"host": [
+						"www",
+						"lb",
+						"lt"
+					],
+					"path": [
+						"webservices",
+						"FxRates",
+						"FxRates.asmx",
+						"getFxRates"
+					],
+					"query": [
+						{
+							"key": "tp",
+							"value": "EU"
+						},
+						{
+							"key": "dt",
+							"value": "2020-08-24"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-activities",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3100/get-activities",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3100",
+					"path": [
+						"get-activities"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

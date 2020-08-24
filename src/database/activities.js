@@ -1,5 +1,4 @@
 const {getDatabase} = require('./mongo');
-
 const collectionName = 'userActivities';
 
 async function insertActivity(activity) {

@@ -22,14 +22,14 @@
                 <form id="currency-form">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">$</span>
+                            <span class="input-group-text">$</span>
                         </div>
                         <input type="number" min="0" step="0.01" class="form-control" id="amount" placeholder="Amount">
                     </div>
                     <div class="error-amount">This field cannot be empty.</div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">%</span>
+                            <span class="input-group-text">%</span>
                         </div>
                         <select class="form-control" id="currency-from"></select>
                     </div>
@@ -37,7 +37,7 @@
 
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">%</span>
+                            <span class="input-group-text">%</span>
                         </div>
                         <select class="form-control" id="currency-to"></select>
                     </div>
@@ -47,9 +47,9 @@
                     </div>
                 </form>
                 <!-- RESULTS -->
-                <div class="hidden-block" id="calculated-results">
+                <div class="hidden-block" id="results">
                     <h5>Calculated Results</h5>
-                    <div id="result"></div>
+                    <p>Calculated value: <span id="calculated-from"></span> = <span id="calculated-result"></span> </p>
                     <button class="btn btn-dark" id="restart-button">Restart</button>
                 </div>
             </div>
@@ -68,7 +68,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-<script src="index.script.js"></script>
+<script src="js/index.script.js"></script>
 <script src="js/jquery-3.5.1.js"></script>
 </body>
 </html>
