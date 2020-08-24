@@ -1,0 +1,19 @@
+.hidden-block {
+    display: none;
+}
+
+.error {
+    display: none;
+    color: red;
+    margin-top: -1rem;
+}
+
+.error-field {
+    border: 2px solid red;
+}
+
+.error-amount {
+    display: none;
+    color: red;
+    margin-top: -1rem;
+}
