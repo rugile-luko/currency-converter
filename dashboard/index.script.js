@@ -8,12 +8,14 @@ $(document).ready(function () {
     $.get("http://localhost:3100/get-currencies", function (data) {
         data["currenciesFrom"].forEach(function (currencyConvertFrom) {
             let newOption = currencyFrom.append(new Option(currencyConvertFrom, currencyConvertFrom));
-            if (newOption.val("EU")) {
+            // comment here
+            if (newOption.val("EUR")) {
                 newOption.attr("selected", true)
             }
         });
         data["currenciesTo"].forEach(function (currencyConvertTo) {
             let newOption = currencyTo.append(new Option(currencyConvertTo, currencyConvertTo));
+            // comment here
             if (newOption.val("GBP")) {
                 newOption.attr("selected", true)
             }
@@ -29,14 +31,28 @@ $("#currency-form").on("submit", function (event) {
 
 // Calculate results
 function calculateResults () {
+    let valid = true;
     if (amount.val() === "") {
         amount.addClass("error-field");
         $(".error-amount").show();
-    } else if (currencyFrom.val() === currencyTo.val()) {
+        valid = false;
+    }
+
+    if (currencyFrom.val() === currencyTo.val()) {
         currencyFrom.addClass("error-field");
         currencyTo.addClass("error-field");
         $(".error").show();
-    } else {
+        valid = false;
+    }
+
+    if (valid) {
+        // TODO: move all this to removeErrorsAndDisable method
+        $(".error-amount").hide();
+        $(".error").hide();
+        amount.removeClass("error-field");
+        currencyFrom.removeClass("error-field");
+        currencyTo.removeClass("error-field");
+
         calculateButton.prop("disabled", true);
         currencyFrom.prop("disabled", true);
         currencyTo.prop("disabled", true);

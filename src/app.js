@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const {startDatabase} = require('./database/mongo');
-const {insertCurrency, getCurrencies} = require('./database/currencies');
+
+const {getCurrencies} = require('./database/currencies');
 const {insertActivity, getActivities} = require('./database/activities');
 const app = express();
 
@@ -13,15 +13,12 @@ app.use(bodyParser.urlencoded({
 
 app.get("/get-currencies", async (req, res) => {
     const currencies = await getCurrencies();
-    let currenciesToResponse = ["EUR"];
+    let currenciesToResponse = ["EUR"]; // TODO: rename list
 
     for (let currency of currencies) {
         if (!currenciesToResponse.includes(currency.currencyTo)) {
             currenciesToResponse.push(currency.currencyTo);
         }
-        // if (!currenciesToResponse.includes(currency.currencyFrom)) {
-        //     currenciesToResponse.push(currency.currencyFrom);
-        // }
     }
     res.send({
         "currenciesFrom": currenciesToResponse,
@@ -69,36 +66,4 @@ app.post("/calculate", async (req, res) => {
     res.send({result: sum});
 });
 
-// start the in-memory MongoDB instance
-startDatabase().then(async () => {
-    const https = require('https');
-
-    https.get('https://www.lb.lt/webservices/FxRates/FxRates.asmx/getFxRates?tp=EU&dt=2020-08-24', (resp) => {
-        let data = '';
-
-        resp.on('data', (chunk) => {
-            data += chunk;
-        });
-
-        resp.on('end', () => {
-            let parseString = require('xml2js').parseString;
-            parseString(data, async function (err, result) {
-                // since endpoint does not return "currency to" eur, we manually add it in
-                await insertCurrency({"currencyFrom": "EUR", "currencyTo": "EUR", "rate": 1.00});
-
-                for (let rate of result["FxRates"]["FxRate"]) {
-                    let currencyTo = rate["CcyAmt"][1]["Ccy"][0];
-                    let currencyRate = rate["CcyAmt"][1]["Amt"][0];
-                    await insertCurrency({"currencyFrom": "EUR", "currencyTo": currencyTo, "rate": currencyRate});
-                }
-            });
-        });
-
-    }).on("error", (err) => {
-        console.log("Error: " + err.message);
-    });
-
-    app.listen(3100, async () => {
-        console.log('listening on port 3100');
-    });
-});
+module.exports = app;
