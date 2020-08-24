@@ -9,7 +9,7 @@ async function insertActivity(activity) {
 
 async function getActivities() {
     const database = await getDatabase();
-    return await database.collection(collectionName).find({}).toArray();
+    return database.collection(collectionName).find({}).toArray();
 }
 
 module.exports = {

@@ -9,7 +9,7 @@ async function insertCurrency(currency) {
 
 async function getCurrencies() {
     const database = await getDatabase();
-    return await database.collection(collectionName).find({}).toArray();
+    return database.collection(collectionName).find({}).toArray();
 }
 
 module.exports = {
