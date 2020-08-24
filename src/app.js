@@ -3,27 +3,25 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const {startDatabase} = require('./database/mongo');
 const {insertCurrency, getCurrencies} = require('./database/currencies');
+const {insertActivity, getActivities} = require('./database/activities');
 const app = express();
 
-// enabling CORS for all requests
 app.use(cors());
-
-// using bodyParser to parse JSON bodies into JS objects
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
 app.get("/get-currencies", async (req, res) => {
     const currencies = await getCurrencies();
-    let currenciesToResponse = [];
+    let currenciesToResponse = ["EUR"];
 
     for (let currency of currencies) {
         if (!currenciesToResponse.includes(currency.currencyTo)) {
             currenciesToResponse.push(currency.currencyTo);
         }
-        if (!currenciesToResponse.includes(currency.currencyFrom)) {
-            currenciesToResponse.push(currency.currencyFrom);
-        }
+        // if (!currenciesToResponse.includes(currency.currencyFrom)) {
+        //     currenciesToResponse.push(currency.currencyFrom);
+        // }
     }
     res.send({
         "currenciesFrom": currenciesToResponse,
@@ -31,11 +29,16 @@ app.get("/get-currencies", async (req, res) => {
     });
 });
 
+app.get("/get-activities", async (req, res) => {
+    const activities = await getActivities();
+    res.send(activities);
+});
+
 app.post("/calculate", async (req, res) => {
     const currencies = await getCurrencies();
     let sum;
 
-    if (req.body["currency-from"] === "EU") {
+    if (req.body["currency-from"] === "EUR") {
         for (let currency of currencies) {
             if (req.body["currency-from"] === currency.currencyFrom && req.body["currency-to"] === currency.currencyTo) {
                 sum = req.body["amount"] * currency.rate;
@@ -56,7 +59,13 @@ app.post("/calculate", async (req, res) => {
         }
         sum = ((1 / from_rate) * to_rate) * req.body["amount"];
     }
-
+    await insertActivity({
+        "datetime": new Date().toISOString(),
+        "currency-from": req.body["currency-from"],
+        "currency-to": req.body["currency-to"],
+        "amount": req.body["amount"],
+        "result": sum
+    });
     res.send({result: sum});
 });
 
@@ -67,19 +76,20 @@ startDatabase().then(async () => {
     https.get('https://www.lb.lt/webservices/FxRates/FxRates.asmx/getFxRates?tp=EU&dt=2020-08-24', (resp) => {
         let data = '';
 
-        // A chunk of data has been received.
         resp.on('data', (chunk) => {
             data += chunk;
         });
 
-        // The whole response has been received. Getting result.
         resp.on('end', () => {
             let parseString = require('xml2js').parseString;
             parseString(data, async function (err, result) {
+                // since endpoint does not return "currency to" eur, we manually add it in
+                await insertCurrency({"currencyFrom": "EUR", "currencyTo": "EUR", "rate": 1.00});
+
                 for (let rate of result["FxRates"]["FxRate"]) {
                     let currencyTo = rate["CcyAmt"][1]["Ccy"][0];
                     let currencyRate = rate["CcyAmt"][1]["Amt"][0];
-                    await insertCurrency({"currencyFrom": "EU", "currencyTo": currencyTo, "rate": currencyRate});
+                    await insertCurrency({"currencyFrom": "EUR", "currencyTo": currencyTo, "rate": currencyRate});
                 }
             });
         });
@@ -88,7 +98,6 @@ startDatabase().then(async () => {
         console.log("Error: " + err.message);
     });
 
-    // start the server
     app.listen(3100, async () => {
         console.log('listening on port 3100');
     });
