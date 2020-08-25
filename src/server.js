@@ -8,8 +8,10 @@ const server = http.createServer(app);
 
 startDatabase().then(async () => {
     const https = require('https');
+    let todaysDate = new Date().toISOString().split('T'[0])
+    let lbEndpoint = 'https://www.lb.lt/webservices/FxRates/FxRates.asmx/getFxRates?tp=EU&dt=' + todaysDate;
 
-    https.get('https://www.lb.lt/webservices/FxRates/FxRates.asmx/getFxRates?tp=EU&dt=2020-08-24', (resp) => {
+    https.get(lbEndpoint, (resp) => {
         let data = '';
 
         resp.on('data', (chunk) => {
