@@ -15,10 +15,5 @@
     "mongodb": "^3.6.0",
     "mongodb-memory-server": "^6.6.4",
     "xml2js": "^0.4.23"
-  },
-  "config": {
-    "mongodbMemoryServer": {
-      "version": "latest"
-    }
   }
 }
